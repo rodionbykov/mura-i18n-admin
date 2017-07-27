@@ -52,19 +52,19 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 
 <cfsavecontent variable="focusblockheader">
   <div class="focus-block-header">
-  	<img src="#application.configBean.getContext()#/admin/assets/images/mura-logo@2x.png" class="mura-logo">
+  	<img src="#application.configBean.getContext()##application.configBean.getAdminDir()#/assets/images/mura-logo@2x.png" class="mura-logo">
 				<h1 class="page-heading">#application.rbFactory.getKeyValue(session.rb,'login.login')#</h1>
   </div><!-- /focus-block-header -->
 </cfsavecontent>
 
 <div id="mura-login">
-<!--- 
+<!---
 		<cfif rc.$.event('status') eq 'challenge' and isdefined('session.mfa')>
 			<cfif rc.compactDisplay eq 'true'>
 				<h1 class="page-heading">#application.rbFactory.getKeyValue(session.rb,'login.authorizationcode')#</h1>
 			<cfelse>
 				<h1 class="page-heading">#application.rbFactory.getKeyValue(session.rb,'login.authorizationcode')#</h1>
-			</cfif> 
+			</cfif>
 		<cfelse>
 			<cfif rc.compactDisplay eq 'true'>
 				<h1 class="page-heading">#application.rbFactory.getKeyValue(session.rb,'login.pleaselogin')#</h1>
@@ -78,7 +78,7 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 			#focusblockheader#
 
 	    <div class="block-content">
-				<cfif not (rc.$.event('status') eq 'challenge' and isdefined('session.mfa'))>	
+				<cfif not (rc.$.event('status') eq 'challenge' and isdefined('session.mfa'))>
 					<cfif rc.status eq 'denied'>
 						<div class="alert alert-error"><span>#application.rbFactory.getKeyValue(session.rb,'login.denied')#</span></div>
 					<cfelseif rc.status eq 'failed'>
@@ -132,17 +132,17 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 							<input type="hidden" name="muraAction" value="cLogin.login">
 							<input type="hidden" name="status" value="challenge">
 							<input type="hidden" name="attemptChallenge" value="true">
-							#rc.$.renderCSRFTokens(format='form')#
+							#rc.$.renderCSRFTokens(format='form',context='login')#
 							</form>
 						</cfif>
-					<cfelse>			
+					<cfelse>
 						<form novalidate="novalidate" id="loginForm" name="frmLogin" method="post" action="index.cfm" onsubmit="return submitForm(this);">
 
 							<div class="mura-control-group">
 						    <label>
 						    	#application.rbFactory.getKeyValue(session.rb,'login.username')#
 						    </label>
-								<input id="username" name="username" type="text">
+								<input id="username" name="username" type="text" autofocus="autofocus">
 							</div>
 
 							<div class="mura-control-group">
@@ -151,30 +151,30 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 					  	</div>
 
 							<cfif rc.$.getBean('configBean').getValue(property='MFA',defaultValue=false)>
-							<div class="mura-control-group half">
-								<!--- <label>Language</label> --->
-								<label></label>
-				      	                                <select name="rb">
-									<option value="en">English</option>
-									<option value="de"<cfif cookie.rb eq "de"> selected</cfif>>Deutsch</option>
-									<option value="nl"<cfif cookie.rb eq "nl"> selected</cfif>>Dutch</option>
-									<option value="fr"<cfif cookie.rb eq "fr"> selected</cfif>>Fran&ccedil;ais</option>
-									<option value="hu"<cfif cookie.rb eq "hu"> selected</cfif>>Hungarian</option>
-									<option value="it"<cfif cookie.rb eq "it"> selected</cfif>>Italian</option>
-									<!---<option value="no"<cfif cookie.rb eq "no"> selected</cfif>>Norwegian</option>--->
+    							<div class="mura-control-group half">
+    								<!--- <label>Language</label> --->
+    								<label></label>
+    				      	        <select name="rb">
+    									<option value="en">English</option>
+    									<option value="de"<cfif cookie.rb eq "de"> selected</cfif>>Deutsch</option>
+    									<option value="nl"<cfif cookie.rb eq "nl"> selected</cfif>>Dutch</option>
+    									<option value="fr"<cfif cookie.rb eq "fr"> selected</cfif>>Fran&ccedil;ais</option>
+    									<option value="hu"<cfif cookie.rb eq "hu"> selected</cfif>>Hungarian</option>
+    									<option value="it"<cfif cookie.rb eq "it"> selected</cfif>>Italian</option>
+    									<!---<option value="no"<cfif cookie.rb eq "no"> selected</cfif>>Norwegian</option>--->
 									<option value="pl"<cfif cookie.rb eq "pl"> selected</cfif>>Polski</option>
-									<option value="pt"<cfif cookie.rb eq "pt"> selected</cfif>>Portuguese</option>
-									<option value="es"<cfif cookie.rb eq "es"> selected</cfif>>Spanish</option>
-									<!---<option value="es">Spanish</option>--->
-						                        <option value="ru"<cfif cookie.rb eq "ru"> selected</cfif>>Русский</option>
-                    							<option value="uk"<cfif cookie.rb eq "uk"> selected</cfif>>Українська</option>
-									</select>
-						  	</div>
+    									<option value="pt"<cfif cookie.rb eq "pt"> selected</cfif>>Portuguese</option>
+    									<option value="es"<cfif cookie.rb eq "es"> selected</cfif>>Spanish</option>
+    									<!---<option value="es">Spanish</option>--->
+									<option value="ru"<cfif cookie.rb eq "ru"> selected</cfif>>Русский</option>
+									<option value="uk"<cfif cookie.rb eq "uk"> selected</cfif>>Українська</option>
+    								</select>
+    						  	</div>
 							<cfelse>
 								<div class="mura-control-group half" id="remember-me">
-				          <label class="css-input switch switch-sm switch-default">
-				              <input type="checkbox" id="rememberMe" name="rememberMe" value="1" ><span></span> #application.rbFactory.getKeyValue(session.rb,'login.rememberme')#
-				          </label>
+        				          <label class="css-input switch switch-sm switch-primary">
+        				              <input type="checkbox" id="rememberMe" name="rememberMe" value="1" ><span></span> #application.rbFactory.getKeyValue(session.rb,'login.rememberme')#
+        				          </label>
 								</div>
 								<div class="mura-control-group half">
 									<!--- <label>Language</label> --->
@@ -206,7 +206,7 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 							<input type="hidden" name="muraAction" value="cLogin.login">
 							<input type="hidden" name="isAdminLogin" value="true">
 							<input type="hidden" name="compactDisplay" value="#esapiEncode('html_attr',rc.compactDisplay)#">
-							#rc.$.renderCSRFTokens(format='form')#
+							#rc.$.renderCSRFTokens(format='form',context='login')#
 						</form>
 
 						<div id="pw-link">
@@ -215,13 +215,13 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 
 				</div><!-- /block-content -->
 			</div><!-- /mura-focus-block -->
-			
+
 		<div class="block mura-focus-block animated" id="mura-password-panel" <cfif not rc.status eq 'sendLogin'>style="display:none;"</cfif>>
-			
+
 			#focusblockheader#
 
 	  	  <div class="block-content">
-			
+
 						<cfif not isBoolean(application.configBean.getValue('showadminloginhelp')) or application.configBean.getValue('showadminloginhelp')>
 							<form novalidate="novalidate" id="sendLogin" name="sendLogin" method="post" action="./?muraAction=cLogin.main" onsubmit="return submitForm(this);">
 
@@ -243,11 +243,11 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 											<cfelse>
 											#application.rbFactory.getKeyValue(session.rb,'login.enteremail')#
 											</cfif>
-								</cfsavecontent> 									
+								</cfsavecontent>
 									<p id="pw-response" class="#alertclass# clear-both">#pwresponse#</p>
 									<div class="mura-control-group">
 										<label>Email Address</label>
-										<input id="email" name="email" type="text">
+										<input id="email" name="email" type="text" autofocus="autofocus">
 									</div>
 							</div>
 							<div class="mura-focus-actions">
@@ -261,7 +261,7 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 
 						<div id="login-link">
 							<!--- 							<label><a href="##">#application.rbFactory.getKeyValue(session.rb,'login.forgetpassword')#</a></label>
-							 --->							
+							 --->
 							 <label><a href="##">Return to Login</a></label>
 						</div>
 
@@ -290,15 +290,17 @@ jQuery(document).ready(function(){
 		}
 	}
 </cfif>
-	
+
 	jQuery('#pw-link a').click(function(){
 		jQuery('#mura-login-panel').removeClass('flipInY').addClass('flipOutY').hide();
 		jQuery('#mura-password-panel').removeClass('flipOutY').show().addClass('flipInY');
+		document.getElementById('email').focus();
 	});
 	jQuery('#login-link a').click(function(){
 		jQuery('#mura-password-panel').removeClass('flipInY').addClass('flipOutY').hide();
 		jQuery('#pw-response').removeClass('alert').removeClass('alert-error').html('<cfoutput>#esapiEncode('html_attr',application.rbFactory.getKeyValue(session.rb,'login.enteremail'))#</cfoutput>');
 		jQuery('#mura-login-panel').removeClass('flipOutY').show().addClass('flipInY');
+		document.getElementById('username').focus();
 	});
 
 });
